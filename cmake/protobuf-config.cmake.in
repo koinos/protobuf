@@ -9,7 +9,7 @@ get_filename_component(_PROTOBUF_PACKAGE_PREFIX
   "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
 if (PROTOBUF_USE_ZLIB)
-  find_package(ZLIB)
+  find_package(ZLIB CONFIG REQUIRED)
 endif()
 
 # Imported targets
