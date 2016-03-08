@@ -85,6 +85,7 @@ endforeach()
 # Export configuration
 
 install(EXPORT protobuf-targets
+  NAMESPACE "Protobuf::"
   DESTINATION "lib/cmake/protobuf"
   COMPONENT protobuf-export)
 

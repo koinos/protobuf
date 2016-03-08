@@ -65,10 +65,10 @@ endfunction()
 #    if the debug one is specified also include debug/optimized keywords
 #    in *_LIBRARIES variable
 function(_protobuf_find_libraries name filename)
-   get_target_property(${name}_LIBRARY lib${filename}
+   get_target_property(${name}_LIBRARY Protobuf::lib${filename}
      IMPORTED_LOCATION_RELEASE)
    set(${name}_LIBRARY "${${name}_LIBRARY}" PARENT_SCOPE)
-   get_target_property(${name}_LIBRARY_DEBUG lib${filename}
+   get_target_property(${name}_LIBRARY_DEBUG Protobuf::lib${filename}
      IMPORTED_LOCATION_DEBUG)
    set(${name}_LIBRARY_DEBUG "${${name}_LIBRARY_DEBUG}" PARENT_SCOPE)
 
@@ -123,10 +123,10 @@ endif()
 set(PROTOBUF_INCLUDE_DIR "${_PROTOBUF_IMPORT_PREFIX}/@CMAKE_INSTALL_INCLUDEDIR@")
 
 # Set the protoc Executable
-get_target_property(PROTOBUF_PROTOC_EXECUTABLE protoc
+get_target_property(PROTOBUF_PROTOC_EXECUTABLE Protobuf::protoc
   IMPORTED_LOCATION_RELEASE)
 if(NOT PROTOBUF_PROTOC_EXECUTABLE)
-  get_target_property(PROTOBUF_PROTOC_EXECUTABLE protoc
+  get_target_property(PROTOBUF_PROTOC_EXECUTABLE Protobuf::protoc
     IMPORTED_LOCATION_DEBUG)
 endif()
 
