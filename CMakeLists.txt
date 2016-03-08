@@ -6,6 +6,9 @@ HunterGate(
   SHA1 "54963db4cd6e2a8780643a3cc48bdbbefedec6cc"
 )
 
+# Project
+project(protobuf C CXX)
+
 hunter_add_package(ZLIB)
 
 add_subdirectory(cmake)
