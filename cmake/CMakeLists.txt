@@ -105,10 +105,10 @@ if (protobuf_WITH_ZLIB)
     # Set ZLIB_INCLUDE_DIRECTORIES for compatible
     set(ZLIB_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRECTORIES} ${ZLIB_INCLUDE_DIRS})
     # Using imported target if exists
-    if (TARGET ZLIB::ZLIB)
-      set(ZLIB_LIBRARIES ZLIB::ZLIB)
+    if (TARGET ZLIB::zlib)
+      set(ZLIB_LIBRARIES ZLIB::zlib)
       set(_protobuf_FIND_ZLIB "if(NOT ZLIB_FOUND)\n  find_package(ZLIB)\nendif()")
-    endif (TARGET ZLIB::ZLIB)
+    endif (TARGET ZLIB::zlib)
   else (ZLIB_FOUND)
     set(HAVE_ZLIB 0)
     # Explicitly set these to empty (override NOT_FOUND) so cmake doesn't
