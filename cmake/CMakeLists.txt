@@ -12,15 +12,19 @@ cmake_policy(SET CMP0022 NEW)
 project(protobuf C CXX)
 
 # Options
-option(protobuf_BUILD_TESTS "Build tests" ON)
-option(protobuf_BUILD_EXAMPLES "Build examples" OFF)
+include(CMakeDependentOption)
+option(protobuf_BUILD_PROTOC "Build protoc" ON)
+option(protobuf_BUILD_LIBPROTOBUF_LITE "Build light library" ON)
+cmake_dependent_option(protobuf_BUILD_LIBPROTOBUF "Build full library" ON "NOT protobuf_BUILD_PROTOC" ON)
+cmake_dependent_option(protobuf_BUILD_TESTS "Build tests" ON "protobuf_BUILD_PROTOC;protobuf_BUILD_LIBPROTOBUF_LITE;protobuf_BUILD_LIBPROTOBUF" OFF)
+cmake_dependent_option(protobuf_BUILD_EXAMPLES "Build examples" OFF "protobuf_BUILD_PROTOC;protobuf_BUILD_LIBPROTOBUF_LITE;protobuf_BUILD_LIBPROTOBUF" OFF)
+
 if (BUILD_SHARED_LIBS)
   set(protobuf_BUILD_SHARED_LIBS_DEFAULT ON)
 else (BUILD_SHARED_LIBS)
   set(protobuf_BUILD_SHARED_LIBS_DEFAULT OFF)
 endif (BUILD_SHARED_LIBS)
 option(protobuf_BUILD_SHARED_LIBS "Build Shared Libraries" ${protobuf_BUILD_SHARED_LIBS_DEFAULT})
-include(CMakeDependentOption)
 cmake_dependent_option(protobuf_MSVC_STATIC_RUNTIME "Link static runtime libraries" ON
   "NOT protobuf_BUILD_SHARED_LIBS" OFF)
 if (MSVC)
@@ -32,6 +36,13 @@ option(protobuf_WITH_ZLIB "Build with zlib support" ${protobuf_WITH_ZLIB_DEFAULT
 set(protobuf_DEBUG_POSTFIX "d"
   CACHE STRING "Default debug postfix")
 mark_as_advanced(protobuf_DEBUG_POSTFIX)
+
+message(STATUS "[protobuf] building protoc: ${protobuf_BUILD_PROTOC}")
+message(STATUS "[protobuf] building libprotobuf: ${protobuf_BUILD_LIBPROTOBUF}")
+message(STATUS "[protobuf] building libprotobuf-light: ${protobuf_BUILD_LIBPROTOBUF_LITE}")
+message(STATUS "[protobuf] building tests: ${protobuf_BUILD_TESTS}")
+message(STATUS "[protobuf] building examples: ${protobuf_BUILD_EXAMPLES}")
+
 # User options
 include(protobuf-options.cmake)
 
