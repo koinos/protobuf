@@ -1,9 +1,17 @@
 include(GNUInstallDirs)
 
-foreach(_library
-  libprotobuf-lite
-  libprotobuf
-  libprotoc)
+set(_install_targets)
+if (protobuf_BUILD_LIBPROTOBUF)
+  list(APPEND _install_targets libprotobuf)
+endif ()
+if (protobuf_BUILD_LIBPROTOBUF_LITE)
+  list(APPEND _install_targets libprotobuf-lite)
+endif ()
+if (protobuf_BUILD_PROTOC)
+  list(APPEND _install_targets libprotoc)
+endif ()
+
+foreach(_library ${_install_targets})
   set_property(TARGET ${_library}
     PROPERTY INTERFACE_INCLUDE_DIRECTORIES
     $<BUILD_INTERFACE:${protobuf_source_dir}/src>
@@ -14,8 +22,12 @@ foreach(_library
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${_library})
 endforeach()
 
-install(TARGETS protoc EXPORT protobuf-targets
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+if (protobuf_BUILD_PROTOC)
+  list(APPEND _install_targets protoc)
+  install(TARGETS protoc EXPORT protobuf-targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc
+    BUNDLE  DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+endif()
 
 file(STRINGS extract_includes.bat.in _extract_strings
   REGEX "^copy")
@@ -94,7 +106,7 @@ configure_file(protobuf-options.cmake
   ${CMAKE_INSTALL_CMAKEDIR}/protobuf-options.cmake @ONLY)
 
 # Allows the build directory to be used as a find directory.
-export(TARGETS libprotobuf-lite libprotobuf libprotoc protoc
+export(TARGETS ${_install_targets}
   NAMESPACE protobuf::
   FILE ${CMAKE_INSTALL_CMAKEDIR}/protobuf-targets.cmake
 )
