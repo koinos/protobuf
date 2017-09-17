@@ -1,9 +1,17 @@
 include(GNUInstallDirs)
 
-foreach(_library
-  libprotobuf-lite
-  libprotobuf
-  libprotoc)
+set(_install_targets)
+if (protobuf_BUILD_LIBPROTOBUF)
+  list(APPEND _install_targets libprotobuf)
+endif ()
+if (protobuf_BUILD_LIBPROTOBUF_LITE)
+  list(APPEND _install_targets libprotobuf-lite)
+endif ()
+if (protobuf_BUILD_PROTOC)
+  list(APPEND _install_targets libprotoc)
+endif ()
+
+foreach(_library ${_install_targets})
   set_property(TARGET ${_library}
     PROPERTY INTERFACE_INCLUDE_DIRECTORIES
     $<BUILD_INTERFACE:${protobuf_source_dir}/src>
@@ -14,24 +22,22 @@ foreach(_library
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${_library})
 endforeach()
 
-install(TARGETS protoc EXPORT protobuf-targets
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+if (protobuf_BUILD_PROTOC)
+  list(APPEND _install_targets protoc)
+  install(TARGETS protoc EXPORT protobuf-targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc
+    BUNDLE  DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+endif()
 
 file(STRINGS extract_includes.bat.in _extract_strings
   REGEX "^copy")
 foreach(_extract_string ${_extract_strings})
-  string(REPLACE "copy \${PROTOBUF_SOURCE_WIN32_PATH}\\" ""
-    _extract_string ${_extract_string})
-  string(REPLACE "\\" "/" _extract_string ${_extract_string})
-  string(REGEX MATCH "^[^ ]+"
-    _extract_from ${_extract_string})
-  string(REGEX REPLACE "^${_extract_from} ([^$]+)" "\\1"
-    _extract_to ${_extract_string})
-  get_filename_component(_extract_from "${protobuf_SOURCE_DIR}/${_extract_from}" ABSOLUTE)
-  get_filename_component(_extract_name ${_extract_to} NAME)
-  get_filename_component(_extract_to ${_extract_to} PATH)
-  string(REPLACE "include/" "${CMAKE_INSTALL_INCLUDEDIR}/"
-    _extract_to "${_extract_to}")
+  string(REGEX REPLACE "^.* .+ include\\\\(.+)$" "\\1"
+    _header ${_extract_string})
+  string(REPLACE "\\" "/" _header ${_header})
+  get_filename_component(_extract_from "${protobuf_SOURCE_DIR}/../src/${_header}" ABSOLUTE)
+  get_filename_component(_extract_name ${_header} NAME)
+  get_filename_component(_extract_to "${CMAKE_INSTALL_INCLUDEDIR}/${_header}" PATH)
   if(EXISTS "${_extract_from}")
     install(FILES "${_extract_from}"
       DESTINATION "${_extract_to}"
@@ -100,7 +106,7 @@ configure_file(protobuf-options.cmake
   ${CMAKE_INSTALL_CMAKEDIR}/protobuf-options.cmake @ONLY)
 
 # Allows the build directory to be used as a find directory.
-export(TARGETS libprotobuf-lite libprotobuf libprotoc protoc
+export(TARGETS ${_install_targets}
   NAMESPACE protobuf::
   FILE ${CMAKE_INSTALL_CMAKEDIR}/protobuf-targets.cmake
 )

@@ -12,15 +12,19 @@ cmake_policy(SET CMP0022 NEW)
 project(protobuf C CXX)
 
 # Options
-option(protobuf_BUILD_TESTS "Build tests" ON)
-option(protobuf_BUILD_EXAMPLES "Build examples" OFF)
+include(CMakeDependentOption)
+option(protobuf_BUILD_PROTOC "Build protoc" ON)
+option(protobuf_BUILD_LIBPROTOBUF_LITE "Build light library" ON)
+cmake_dependent_option(protobuf_BUILD_LIBPROTOBUF "Build full library" ON "NOT protobuf_BUILD_PROTOC" ON)
+cmake_dependent_option(protobuf_BUILD_TESTS "Build tests" ON "protobuf_BUILD_PROTOC;protobuf_BUILD_LIBPROTOBUF_LITE;protobuf_BUILD_LIBPROTOBUF" OFF)
+cmake_dependent_option(protobuf_BUILD_EXAMPLES "Build examples" OFF "protobuf_BUILD_PROTOC;protobuf_BUILD_LIBPROTOBUF_LITE;protobuf_BUILD_LIBPROTOBUF" OFF)
+
 if (BUILD_SHARED_LIBS)
   set(protobuf_BUILD_SHARED_LIBS_DEFAULT ON)
 else (BUILD_SHARED_LIBS)
   set(protobuf_BUILD_SHARED_LIBS_DEFAULT OFF)
 endif (BUILD_SHARED_LIBS)
 option(protobuf_BUILD_SHARED_LIBS "Build Shared Libraries" ${protobuf_BUILD_SHARED_LIBS_DEFAULT})
-include(CMakeDependentOption)
 cmake_dependent_option(protobuf_MSVC_STATIC_RUNTIME "Link static runtime libraries" ON
   "NOT protobuf_BUILD_SHARED_LIBS" OFF)
 if (MSVC)
@@ -32,6 +36,13 @@ option(protobuf_WITH_ZLIB "Build with zlib support" ${protobuf_WITH_ZLIB_DEFAULT
 set(protobuf_DEBUG_POSTFIX "d"
   CACHE STRING "Default debug postfix")
 mark_as_advanced(protobuf_DEBUG_POSTFIX)
+
+message(STATUS "[protobuf] building protoc: ${protobuf_BUILD_PROTOC}")
+message(STATUS "[protobuf] building libprotobuf: ${protobuf_BUILD_LIBPROTOBUF}")
+message(STATUS "[protobuf] building libprotobuf-light: ${protobuf_BUILD_LIBPROTOBUF_LITE}")
+message(STATUS "[protobuf] building tests: ${protobuf_BUILD_TESTS}")
+message(STATUS "[protobuf] building examples: ${protobuf_BUILD_EXAMPLES}")
+
 # User options
 include(protobuf-options.cmake)
 
@@ -95,10 +106,10 @@ if (protobuf_WITH_ZLIB)
     # Set ZLIB_INCLUDE_DIRECTORIES for compatible
     set(ZLIB_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRECTORIES} ${ZLIB_INCLUDE_DIRS})
     # Using imported target if exists
-    if (TARGET ZLIB::ZLIB)
-      set(ZLIB_LIBRARIES ZLIB::ZLIB)
+    if (TARGET ZLIB::zlib)
+      set(ZLIB_LIBRARIES ZLIB::zlib)
       set(_protobuf_FIND_ZLIB "if(NOT ZLIB_FOUND)\n  find_package(ZLIB)\nendif()")
-    endif (TARGET ZLIB::ZLIB)
+    endif (TARGET ZLIB::zlib)
   else (ZLIB_FOUND)
     set(HAVE_ZLIB 0)
     # Explicitly set these to empty (override NOT_FOUND) so cmake doesn't
@@ -135,7 +146,7 @@ endif (protobuf_BUILD_SHARED_LIBS)
 if (MSVC)
   # Build with multiple processes
   add_definitions(/MP)
-  add_definitions(/wd4244 /wd4267 /wd4018 /wd4355 /wd4800 /wd4251 /wd4996 /wd4146 /wd4305)
+  add_definitions(/wd4244 /wd4267 /wd4018 /wd4355 /wd4800 /wd4251 /wd4996 /wd4146 /wd4305 /wd4309)
   # Allow big object
   add_definitions(/bigobj)
   string(REPLACE "/" "\\" PROTOBUF_SOURCE_WIN32_PATH ${protobuf_SOURCE_DIR})
