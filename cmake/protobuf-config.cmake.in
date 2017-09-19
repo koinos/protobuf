@@ -14,9 +14,9 @@ function(protobuf_generate)
     list(APPEND _singleargs TARGET)
   endif()
 
-  cmake_parse_arguments(protobuf_generate "APPEND_PATH" "${_singleargs}" "PROTOS IMPORT_DIRS GENERATE_EXTENSIONS" "${ARGN}")
+  cmake_parse_arguments(protobuf_generate "APPEND_PATH" "${_singleargs}" "PROTOS;IMPORT_DIRS;GENERATE_EXTENSIONS" "${ARGN}")
 
-  if(protobuf_generate_PROTOS AND NOT protobuf_generate_TARGET)
+  if(NOT protobuf_generate_PROTOS AND NOT protobuf_generate_TARGET)
     message(SEND_ERROR "Error: protobuf_generate called without any targets or source files")
     return()
   endif()
@@ -83,7 +83,7 @@ function(protobuf_generate)
     get_filename_component(_abs_file ${_proto} ABSOLUTE)
     get_filename_component(_basename ${_proto} NAME_WE)
 
-    foreach(_ext ${_output_extensions})
+    foreach(_ext ${protobuf_GENERATE_EXTENSIONS})
       list(APPEND _generated_srcs "${CMAKE_CURRENT_BINARY_DIR}/${_basename}${_ext}")
     endforeach()
 
