@@ -215,15 +215,18 @@ add_custom_command(
   COMMAND js_embed ${js_well_known_types_sources} > ${protobuf_source_dir}/src/google/protobuf/compiler/js/well_known_types_embed.cc
 )
 
-add_library(libprotoc ${protobuf_SHARED_OR_STATIC}
-  ${libprotoc_files} ${libprotoc_headers})
-target_link_libraries(libprotoc libprotobuf)
-if(MSVC AND protobuf_BUILD_SHARED_LIBS)
-  target_compile_definitions(libprotoc
-    PUBLIC  PROTOBUF_USE_DLLS
-    PRIVATE LIBPROTOC_EXPORTS)
-endif()
-set_target_properties(libprotoc PROPERTIES
-    COMPILE_DEFINITIONS LIBPROTOC_EXPORTS
-    OUTPUT_NAME ${LIB_PREFIX}protoc
-    DEBUG_POSTFIX "${protobuf_DEBUG_POSTFIX}")
+
+if (protobuf_BUILD_PROTOC)
+    add_library(libprotoc ${protobuf_SHARED_OR_STATIC}
+      ${libprotoc_files} ${libprotoc_headers})
+    target_link_libraries(libprotoc libprotobuf)
+    if(MSVC AND protobuf_BUILD_SHARED_LIBS)
+      target_compile_definitions(libprotoc
+        PUBLIC  PROTOBUF_USE_DLLS
+        PRIVATE LIBPROTOC_EXPORTS)
+    endif()
+    set_target_properties(libprotoc PROPERTIES
+        COMPILE_DEFINITIONS LIBPROTOC_EXPORTS
+        OUTPUT_NAME ${LIB_PREFIX}protoc
+        DEBUG_POSTFIX "${protobuf_DEBUG_POSTFIX}")
+endif (protobuf_BUILD_PROTOC)

@@ -127,28 +127,50 @@ if(NOT DEFINED PROTOBUF_GENERATE_CPP_APPEND_PATH)
 endif()
 
 # The Protobuf library
-_protobuf_find_libraries(Protobuf protobuf)
+if(@protobuf_BUILD_LIBPROTOBUF@) # protobuf_BUILD_LIBPROTOBUF
+  _protobuf_find_libraries(Protobuf protobuf)
+
+  # Set the include directory
+  get_target_property(Protobuf_INCLUDE_DIRS protobuf::libprotobuf
+      INTERFACE_INCLUDE_DIRECTORIES)
+endif()
 
 # The Protobuf Lite library
-_protobuf_find_libraries(Protobuf_LITE protobuf-lite)
+if(@protobuf_BUILD_LIBPROTOBUF_LITE@) #protobuf_BUILD_LIBPROTOBUF_LITE
+  _protobuf_find_libraries(Protobuf_LITE protobuf-lite)
+
+  # Set the include directory
+  get_target_property(Protobuf_INCLUDE_DIRS protobuf::libprotobuf-lite
+      INTERFACE_INCLUDE_DIRECTORIES)
+endif()
 
 # The Protobuf Protoc Library
-_protobuf_find_libraries(Protobuf_PROTOC protoc)
+if(@protobuf_BUILD_PROTOC@) #protobuf_BUILD_PROTOC
+  _protobuf_find_libraries(Protobuf_PROTOC protoc)
+endif()
 
 if(UNIX)
   _protobuf_find_threads()
 endif()
 
-# Set the include directory
-get_target_property(Protobuf_INCLUDE_DIRS protobuf::libprotobuf
-  INTERFACE_INCLUDE_DIRECTORIES)
-
 # Set the protoc Executable
-get_target_property(Protobuf_PROTOC_EXECUTABLE protobuf::protoc
-  IMPORTED_LOCATION_RELEASE)
-if(NOT EXISTS "${Protobuf_PROTOC_EXECUTABLE}")
+if(@protobuf_BUILD_PROTOC@) # protobuf_BUILD_PROTOC
   get_target_property(Protobuf_PROTOC_EXECUTABLE protobuf::protoc
-    IMPORTED_LOCATION_DEBUG)
+    IMPORTED_LOCATION_RELEASE)
+  if(NOT EXISTS "${Protobuf_PROTOC_EXECUTABLE}")
+    get_target_property(Protobuf_PROTOC_EXECUTABLE protobuf::protoc
+      IMPORTED_LOCATION_DEBUG)
+  endif()
+endif()
+
+
+set(_required_vars)
+if (@protobuf_BUILD_LIBPROTOBUF@ OR @protobuf_BUILD_LIBPROTOBUF_LITE@) # protobuf_BUILD_LIBPROTOBUF OR protobuf_BUILD_LIBPROTOBUF_LITE
+  list(APPEND _required_vars Protobuf_LIBRARIES Protobuf_INCLUDE_DIRS)
+endif()
+
+if (@protobuf_BUILD_PROTOC@) # protobuf_BUILD_PROTOC
+  list(APPEND _required_vars Protobuf_PROTOC_EXECUTABLE)
 endif()
 if(NOT EXISTS "${Protobuf_PROTOC_EXECUTABLE}")
   get_target_property(Protobuf_PROTOC_EXECUTABLE protobuf::protoc
@@ -160,7 +182,7 @@ set(Protobuf_VERSION "@protobuf_VERSION@")
 
 include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(Protobuf
-    REQUIRED_VARS Protobuf_PROTOC_EXECUTABLE Protobuf_LIBRARIES Protobuf_INCLUDE_DIRS
+    REQUIRED_VARS ${_required_vars}
     VERSION_VAR Protobuf_VERSION
 )
 

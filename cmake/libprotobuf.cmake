@@ -112,18 +112,21 @@ set(libprotobuf_includes
   ${protobuf_source_dir}/src/google/protobuf/wrappers.pb.h
 )
 
-add_library(libprotobuf ${protobuf_SHARED_OR_STATIC}
-  ${libprotobuf_lite_files} ${libprotobuf_files} ${libprotobuf_includes})
-target_link_libraries(libprotobuf ${CMAKE_THREAD_LIBS_INIT})
-if(protobuf_WITH_ZLIB)
-    target_link_libraries(libprotobuf ${ZLIB_LIBRARIES})
-endif()
-target_include_directories(libprotobuf PUBLIC ${protobuf_source_dir}/src)
-if(MSVC AND protobuf_BUILD_SHARED_LIBS)
-  target_compile_definitions(libprotobuf
-    PUBLIC  PROTOBUF_USE_DLLS
-    PRIVATE LIBPROTOBUF_EXPORTS)
-endif()
-set_target_properties(libprotobuf PROPERTIES
-    OUTPUT_NAME ${LIB_PREFIX}protobuf
-    DEBUG_POSTFIX "${protobuf_DEBUG_POSTFIX}")
+
+if (protobuf_BUILD_LIBPROTOBUF)
+    add_library(libprotobuf ${protobuf_SHARED_OR_STATIC}
+      ${libprotobuf_lite_files} ${libprotobuf_files} ${libprotobuf_includes})
+    target_link_libraries(libprotobuf ${CMAKE_THREAD_LIBS_INIT})
+    if(protobuf_WITH_ZLIB)
+        target_link_libraries(libprotobuf ${ZLIB_LIBRARIES})
+    endif()
+    target_include_directories(libprotobuf PUBLIC ${protobuf_source_dir}/src)
+    if(MSVC AND protobuf_BUILD_SHARED_LIBS)
+      target_compile_definitions(libprotobuf
+        PUBLIC  PROTOBUF_USE_DLLS
+        PRIVATE LIBPROTOBUF_EXPORTS)
+    endif()
+    set_target_properties(libprotobuf PROPERTIES
+        OUTPUT_NAME ${LIB_PREFIX}protobuf
+        DEBUG_POSTFIX "${protobuf_DEBUG_POSTFIX}")
+endif (protobuf_BUILD_LIBPROTOBUF)

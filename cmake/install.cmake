@@ -1,14 +1,23 @@
 include(GNUInstallDirs)
 
+set(_install_targets)
+if (protobuf_BUILD_LIBPROTOBUF)
+  list(APPEND _install_targets libprotobuf)
+endif ()
+if (protobuf_BUILD_LIBPROTOBUF_LITE)
+  list(APPEND _install_targets libprotobuf-lite)
+endif ()
+if (protobuf_BUILD_PROTOC)
+  list(APPEND _install_targets libprotoc)
+endif ()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf.pc.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/protobuf.pc @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf-lite.pc.cmake
                ${CMAKE_CURRENT_BINARY_DIR}/protobuf-lite.pc @ONLY)
 
 foreach(_library
-  libprotobuf-lite
-  libprotobuf
-  libprotoc)
+  ${_install_targets})
   set_property(TARGET ${_library}
     PROPERTY INTERFACE_INCLUDE_DIRECTORIES
     $<BUILD_INTERFACE:${protobuf_source_dir}/src>
@@ -19,8 +28,12 @@ foreach(_library
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${_library})
 endforeach()
 
-install(TARGETS protoc EXPORT protobuf-targets
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+if (protobuf_BUILD_PROTOC)
+  list(APPEND _install_targets protoc)
+  install(TARGETS protoc EXPORT protobuf-targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc
+    BUNDLE  DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+endif()
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/protobuf.pc ${CMAKE_CURRENT_BINARY_DIR}/protobuf-lite.pc DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
@@ -101,7 +114,7 @@ configure_file(protobuf-options.cmake
   ${CMAKE_INSTALL_CMAKEDIR}/protobuf-options.cmake @ONLY)
 
 # Allows the build directory to be used as a find directory.
-export(TARGETS libprotobuf-lite libprotobuf libprotoc protoc
+export(TARGETS ${_install_targets}
   NAMESPACE protobuf::
   FILE ${CMAKE_INSTALL_CMAKEDIR}/protobuf-targets.cmake
 )
