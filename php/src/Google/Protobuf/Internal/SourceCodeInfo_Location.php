@@ -8,16 +8,14 @@ use Google\Protobuf\Internal\GPBType;
 use Google\Protobuf\Internal\GPBWire;
 use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\InputStream;
-
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * Protobuf type <code>google.protobuf.SourceCodeInfo.Location</code>
+ * Generated from protobuf message <code>google.protobuf.SourceCodeInfo.Location</code>
  */
 class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
 {
     /**
-     * <pre>
      * Identifies which part of the FileDescriptorProto was defined at this
      * location.
      * Each element is a field number or an index.  They form a path from
@@ -39,27 +37,23 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
      *   [ 4, 3, 2, 7 ]
      * this path refers to the whole field declaration (from the beginning
      * of the label to the terminating semicolon).
-     * </pre>
      *
-     * <code>repeated int32 path = 1 [packed = true];</code>
+     * Generated from protobuf field <code>repeated int32 path = 1 [packed = true];</code>
      */
     private $path;
     private $has_path = false;
     /**
-     * <pre>
      * Always has exactly three or four elements: start line, start column,
      * end line (optional, otherwise assumed same as start line), end column.
      * These are packed into a single field for efficiency.  Note that line
      * and column numbers are zero-based -- typically you will want to add
      * 1 to each before displaying to a user.
-     * </pre>
      *
-     * <code>repeated int32 span = 2 [packed = true];</code>
+     * Generated from protobuf field <code>repeated int32 span = 2 [packed = true];</code>
      */
     private $span;
     private $has_span = false;
     /**
-     * <pre>
      * If this SourceCodeInfo represents a complete declaration, these are any
      * comments appearing before and after the declaration which appear to be
      * attached to the declaration.
@@ -96,19 +90,18 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
      *    * grault. *&#47;
      *   optional int32 grault = 6;
      *   // ignored detached comments.
-     * </pre>
      *
-     * <code>optional string leading_comments = 3;</code>
+     * Generated from protobuf field <code>optional string leading_comments = 3;</code>
      */
     private $leading_comments = '';
     private $has_leading_comments = false;
     /**
-     * <code>optional string trailing_comments = 4;</code>
+     * Generated from protobuf field <code>optional string trailing_comments = 4;</code>
      */
     private $trailing_comments = '';
     private $has_trailing_comments = false;
     /**
-     * <code>repeated string leading_detached_comments = 6;</code>
+     * Generated from protobuf field <code>repeated string leading_detached_comments = 6;</code>
      */
     private $leading_detached_comments;
     private $has_leading_detached_comments = false;
@@ -119,7 +112,6 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * Identifies which part of the FileDescriptorProto was defined at this
      * location.
      * Each element is a field number or an index.  They form a path from
@@ -141,9 +133,9 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
      *   [ 4, 3, 2, 7 ]
      * this path refers to the whole field declaration (from the beginning
      * of the label to the terminating semicolon).
-     * </pre>
      *
-     * <code>repeated int32 path = 1 [packed = true];</code>
+     * Generated from protobuf field <code>repeated int32 path = 1 [packed = true];</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getPath()
     {
@@ -151,7 +143,6 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * Identifies which part of the FileDescriptorProto was defined at this
      * location.
      * Each element is a field number or an index.  They form a path from
@@ -173,11 +164,12 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
      *   [ 4, 3, 2, 7 ]
      * this path refers to the whole field declaration (from the beginning
      * of the label to the terminating semicolon).
-     * </pre>
      *
-     * <code>repeated int32 path = 1 [packed = true];</code>
+     * Generated from protobuf field <code>repeated int32 path = 1 [packed = true];</code>
+     * @param int[]|\Google\Protobuf\Internal\RepeatedField $var
+     * @return $this
      */
-    public function setPath(&$var)
+    public function setPath($var)
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::INT32);
         $this->path = $arr;
@@ -192,15 +184,14 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * Always has exactly three or four elements: start line, start column,
      * end line (optional, otherwise assumed same as start line), end column.
      * These are packed into a single field for efficiency.  Note that line
      * and column numbers are zero-based -- typically you will want to add
      * 1 to each before displaying to a user.
-     * </pre>
      *
-     * <code>repeated int32 span = 2 [packed = true];</code>
+     * Generated from protobuf field <code>repeated int32 span = 2 [packed = true];</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getSpan()
     {
@@ -208,17 +199,17 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * Always has exactly three or four elements: start line, start column,
      * end line (optional, otherwise assumed same as start line), end column.
      * These are packed into a single field for efficiency.  Note that line
      * and column numbers are zero-based -- typically you will want to add
      * 1 to each before displaying to a user.
-     * </pre>
      *
-     * <code>repeated int32 span = 2 [packed = true];</code>
+     * Generated from protobuf field <code>repeated int32 span = 2 [packed = true];</code>
+     * @param int[]|\Google\Protobuf\Internal\RepeatedField $var
+     * @return $this
      */
-    public function setSpan(&$var)
+    public function setSpan($var)
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::INT32);
         $this->span = $arr;
@@ -233,7 +224,6 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * If this SourceCodeInfo represents a complete declaration, these are any
      * comments appearing before and after the declaration which appear to be
      * attached to the declaration.
@@ -270,9 +260,9 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
      *    * grault. *&#47;
      *   optional int32 grault = 6;
      *   // ignored detached comments.
-     * </pre>
      *
-     * <code>optional string leading_comments = 3;</code>
+     * Generated from protobuf field <code>optional string leading_comments = 3;</code>
+     * @return string
      */
     public function getLeadingComments()
     {
@@ -280,7 +270,6 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * If this SourceCodeInfo represents a complete declaration, these are any
      * comments appearing before and after the declaration which appear to be
      * attached to the declaration.
@@ -317,9 +306,10 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
      *    * grault. *&#47;
      *   optional int32 grault = 6;
      *   // ignored detached comments.
-     * </pre>
      *
-     * <code>optional string leading_comments = 3;</code>
+     * Generated from protobuf field <code>optional string leading_comments = 3;</code>
+     * @param string $var
+     * @return $this
      */
     public function setLeadingComments($var)
     {
@@ -336,7 +326,8 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>optional string trailing_comments = 4;</code>
+     * Generated from protobuf field <code>optional string trailing_comments = 4;</code>
+     * @return string
      */
     public function getTrailingComments()
     {
@@ -344,7 +335,9 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>optional string trailing_comments = 4;</code>
+     * Generated from protobuf field <code>optional string trailing_comments = 4;</code>
+     * @param string $var
+     * @return $this
      */
     public function setTrailingComments($var)
     {
@@ -361,7 +354,8 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>repeated string leading_detached_comments = 6;</code>
+     * Generated from protobuf field <code>repeated string leading_detached_comments = 6;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getLeadingDetachedComments()
     {
@@ -369,9 +363,11 @@ class SourceCodeInfo_Location extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>repeated string leading_detached_comments = 6;</code>
+     * Generated from protobuf field <code>repeated string leading_detached_comments = 6;</code>
+     * @param string[]|\Google\Protobuf\Internal\RepeatedField $var
+     * @return $this
      */
-    public function setLeadingDetachedComments(&$var)
+    public function setLeadingDetachedComments($var)
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::STRING);
         $this->leading_detached_comments = $arr;

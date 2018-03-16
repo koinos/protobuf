@@ -8,42 +8,35 @@ use Google\Protobuf\Internal\GPBType;
 use Google\Protobuf\Internal\GPBWire;
 use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\InputStream;
-
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * Protobuf type <code>google.protobuf.EnumOptions</code>
+ * Generated from protobuf message <code>google.protobuf.EnumOptions</code>
  */
 class EnumOptions extends \Google\Protobuf\Internal\Message
 {
     /**
-     * <pre>
      * Set this option to true to allow mapping different tag names to the same
      * value.
-     * </pre>
      *
-     * <code>optional bool allow_alias = 2;</code>
+     * Generated from protobuf field <code>optional bool allow_alias = 2;</code>
      */
     private $allow_alias = false;
     private $has_allow_alias = false;
     /**
-     * <pre>
      * Is this enum deprecated?
      * Depending on the target platform, this can emit Deprecated annotations
      * for the enum, or it will be completely ignored; in the very least, this
      * is a formalization for deprecating enums.
-     * </pre>
      *
-     * <code>optional bool deprecated = 3 [default = false];</code>
+     * Generated from protobuf field <code>optional bool deprecated = 3 [default = false];</code>
      */
     private $deprecated = false;
     private $has_deprecated = false;
     /**
-     * <pre>
      * The parser stores options it doesn't recognize here. See above.
-     * </pre>
      *
-     * <code>repeated .google.protobuf.UninterpretedOption uninterpreted_option = 999;</code>
+     * Generated from protobuf field <code>repeated .google.protobuf.UninterpretedOption uninterpreted_option = 999;</code>
      */
     private $uninterpreted_option;
     private $has_uninterpreted_option = false;
@@ -54,12 +47,11 @@ class EnumOptions extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * Set this option to true to allow mapping different tag names to the same
      * value.
-     * </pre>
      *
-     * <code>optional bool allow_alias = 2;</code>
+     * Generated from protobuf field <code>optional bool allow_alias = 2;</code>
+     * @return bool
      */
     public function getAllowAlias()
     {
@@ -67,12 +59,12 @@ class EnumOptions extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * Set this option to true to allow mapping different tag names to the same
      * value.
-     * </pre>
      *
-     * <code>optional bool allow_alias = 2;</code>
+     * Generated from protobuf field <code>optional bool allow_alias = 2;</code>
+     * @param bool $var
+     * @return $this
      */
     public function setAllowAlias($var)
     {
@@ -89,14 +81,13 @@ class EnumOptions extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * Is this enum deprecated?
      * Depending on the target platform, this can emit Deprecated annotations
      * for the enum, or it will be completely ignored; in the very least, this
      * is a formalization for deprecating enums.
-     * </pre>
      *
-     * <code>optional bool deprecated = 3 [default = false];</code>
+     * Generated from protobuf field <code>optional bool deprecated = 3 [default = false];</code>
+     * @return bool
      */
     public function getDeprecated()
     {
@@ -104,14 +95,14 @@ class EnumOptions extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * Is this enum deprecated?
      * Depending on the target platform, this can emit Deprecated annotations
      * for the enum, or it will be completely ignored; in the very least, this
      * is a formalization for deprecating enums.
-     * </pre>
      *
-     * <code>optional bool deprecated = 3 [default = false];</code>
+     * Generated from protobuf field <code>optional bool deprecated = 3 [default = false];</code>
+     * @param bool $var
+     * @return $this
      */
     public function setDeprecated($var)
     {
@@ -128,11 +119,10 @@ class EnumOptions extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * The parser stores options it doesn't recognize here. See above.
-     * </pre>
      *
-     * <code>repeated .google.protobuf.UninterpretedOption uninterpreted_option = 999;</code>
+     * Generated from protobuf field <code>repeated .google.protobuf.UninterpretedOption uninterpreted_option = 999;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getUninterpretedOption()
     {
@@ -140,13 +130,13 @@ class EnumOptions extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <pre>
      * The parser stores options it doesn't recognize here. See above.
-     * </pre>
      *
-     * <code>repeated .google.protobuf.UninterpretedOption uninterpreted_option = 999;</code>
+     * Generated from protobuf field <code>repeated .google.protobuf.UninterpretedOption uninterpreted_option = 999;</code>
+     * @param \Google\Protobuf\Internal\UninterpretedOption[]|\Google\Protobuf\Internal\RepeatedField $var
+     * @return $this
      */
-    public function setUninterpretedOption(&$var)
+    public function setUninterpretedOption($var)
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \Google\Protobuf\Internal\UninterpretedOption::class);
         $this->uninterpreted_option = $arr;

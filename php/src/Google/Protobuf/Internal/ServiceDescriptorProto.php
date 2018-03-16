@@ -8,30 +8,27 @@ use Google\Protobuf\Internal\GPBType;
 use Google\Protobuf\Internal\GPBWire;
 use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\InputStream;
-
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * <pre>
  * Describes a service.
- * </pre>
  *
- * Protobuf type <code>google.protobuf.ServiceDescriptorProto</code>
+ * Generated from protobuf message <code>google.protobuf.ServiceDescriptorProto</code>
  */
 class ServiceDescriptorProto extends \Google\Protobuf\Internal\Message
 {
     /**
-     * <code>optional string name = 1;</code>
+     * Generated from protobuf field <code>optional string name = 1;</code>
      */
     private $name = '';
     private $has_name = false;
     /**
-     * <code>repeated .google.protobuf.MethodDescriptorProto method = 2;</code>
+     * Generated from protobuf field <code>repeated .google.protobuf.MethodDescriptorProto method = 2;</code>
      */
     private $method;
     private $has_method = false;
     /**
-     * <code>optional .google.protobuf.ServiceOptions options = 3;</code>
+     * Generated from protobuf field <code>optional .google.protobuf.ServiceOptions options = 3;</code>
      */
     private $options = null;
     private $has_options = false;
@@ -42,7 +39,8 @@ class ServiceDescriptorProto extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>optional string name = 1;</code>
+     * Generated from protobuf field <code>optional string name = 1;</code>
+     * @return string
      */
     public function getName()
     {
@@ -50,7 +48,9 @@ class ServiceDescriptorProto extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>optional string name = 1;</code>
+     * Generated from protobuf field <code>optional string name = 1;</code>
+     * @param string $var
+     * @return $this
      */
     public function setName($var)
     {
@@ -67,7 +67,8 @@ class ServiceDescriptorProto extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>repeated .google.protobuf.MethodDescriptorProto method = 2;</code>
+     * Generated from protobuf field <code>repeated .google.protobuf.MethodDescriptorProto method = 2;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
      */
     public function getMethod()
     {
@@ -75,9 +76,11 @@ class ServiceDescriptorProto extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>repeated .google.protobuf.MethodDescriptorProto method = 2;</code>
+     * Generated from protobuf field <code>repeated .google.protobuf.MethodDescriptorProto method = 2;</code>
+     * @param \Google\Protobuf\Internal\MethodDescriptorProto[]|\Google\Protobuf\Internal\RepeatedField $var
+     * @return $this
      */
-    public function setMethod(&$var)
+    public function setMethod($var)
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \Google\Protobuf\Internal\MethodDescriptorProto::class);
         $this->method = $arr;
@@ -92,7 +95,8 @@ class ServiceDescriptorProto extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>optional .google.protobuf.ServiceOptions options = 3;</code>
+     * Generated from protobuf field <code>optional .google.protobuf.ServiceOptions options = 3;</code>
+     * @return \Google\Protobuf\Internal\ServiceOptions
      */
     public function getOptions()
     {
@@ -100,9 +104,11 @@ class ServiceDescriptorProto extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * <code>optional .google.protobuf.ServiceOptions options = 3;</code>
+     * Generated from protobuf field <code>optional .google.protobuf.ServiceOptions options = 3;</code>
+     * @param \Google\Protobuf\Internal\ServiceOptions $var
+     * @return $this
      */
-    public function setOptions(&$var)
+    public function setOptions($var)
     {
         GPBUtil::checkMessage($var, \Google\Protobuf\Internal\ServiceOptions::class);
         $this->options = $var;

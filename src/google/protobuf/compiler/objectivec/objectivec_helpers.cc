@@ -28,9 +28,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifdef _MSC_VER
-#include <io.h>
-#else
+#ifndef _MSC_VER
 #include <unistd.h>
 #endif
 #include <climits>
@@ -49,7 +47,9 @@
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/io_win32.h>
 #include <google/protobuf/stubs/strutil.h>
+
 
 // NOTE: src/google/protobuf/compiler/plugin.cc makes use of cerr for some
 // error cases, so it seems to be ok to use as a back door for errors.
@@ -58,6 +58,16 @@ namespace google {
 namespace protobuf {
 namespace compiler {
 namespace objectivec {
+
+// <io.h> is transitively included in this file. Import the functions explicitly
+// in this port namespace to avoid ambiguous definition.
+namespace posix {
+#ifdef _WIN32
+using ::google::protobuf::internal::win32::open;
+#else
+using ::open;
+#endif
+}  // namespace port
 
 Options::Options() {
   // Default is the value of the env for the package prefixes.
@@ -196,7 +206,7 @@ const char* const kReservedWordList[] = {
     // method declared in protos. The main cases are methods
     // that take no arguments, or setFoo:/hasFoo: type methods.
     "clear", "data", "delimitedData", "descriptor", "extensionRegistry",
-    "extensionsCurrentlySet", "isInitialized", "serializedSize",
+    "extensionsCurrentlySet", "initialized", "isInitialized", "serializedSize",
     "sortedExtensionsInUse", "unknownFields",
 
     // MacTypes.h names
@@ -980,13 +990,13 @@ namespace {
 
 class ExpectedPrefixesCollector : public LineConsumer {
  public:
-  ExpectedPrefixesCollector(map<string, string>* inout_package_to_prefix_map)
+  ExpectedPrefixesCollector(std::map<string, string>* inout_package_to_prefix_map)
       : prefix_map_(inout_package_to_prefix_map) {}
 
   virtual bool ConsumeLine(const StringPiece& line, string* out_error);
 
  private:
-  map<string, string>* prefix_map_;
+  std::map<string, string>* prefix_map_;
 };
 
 bool ExpectedPrefixesCollector::ConsumeLine(
@@ -1009,7 +1019,7 @@ bool ExpectedPrefixesCollector::ConsumeLine(
 }
 
 bool LoadExpectedPackagePrefixes(const Options &generation_options,
-                                 map<string, string>* prefix_map,
+                                 std::map<string, string>* prefix_map,
                                  string* out_error) {
   if (generation_options.expected_prefixes_path.empty()) {
     return true;
@@ -1023,7 +1033,7 @@ bool LoadExpectedPackagePrefixes(const Options &generation_options,
 bool ValidateObjCClassPrefix(
     const FileDescriptor* file,
     const string& expected_prefixes_path,
-    const map<string, string>& expected_package_prefixes,
+    const std::map<string, string>& expected_package_prefixes,
     string* out_error) {
   const string prefix = file->options().objc_class_prefix();
   const string package = file->package();
@@ -1033,7 +1043,7 @@ bool ValidateObjCClassPrefix(
 
   // Check: Error - See if there was an expected prefix for the package and
   // report if it doesn't match (wrong or missing).
-  map<string, string>::const_iterator package_match =
+  std::map<string, string>::const_iterator package_match =
       expected_package_prefixes.find(package);
   if (package_match != expected_package_prefixes.end()) {
     // There was an entry, and...
@@ -1082,7 +1092,7 @@ bool ValidateObjCClassPrefix(
 
   // Look for any other package that uses the same prefix.
   string other_package_for_prefix;
-  for (map<string, string>::const_iterator i = expected_package_prefixes.begin();
+  for (std::map<string, string>::const_iterator i = expected_package_prefixes.begin();
        i != expected_package_prefixes.end(); ++i) {
     if (i->second == prefix) {
       other_package_for_prefix = i->first;
@@ -1150,7 +1160,7 @@ bool ValidateObjCClassPrefixes(const vector<const FileDescriptor*>& files,
                                const Options& generation_options,
                                string* out_error) {
   // Load the expected package prefixes, if available, to validate against.
-  map<string, string> expected_package_prefixes;
+  std::map<string, string> expected_package_prefixes;
   if (!LoadExpectedPackagePrefixes(generation_options,
                                    &expected_package_prefixes,
                                    out_error)) {
@@ -1464,7 +1474,7 @@ bool ParseSimpleFile(
     const string& path, LineConsumer* line_consumer, string* out_error) {
   int fd;
   do {
-    fd = open(path.c_str(), O_RDONLY);
+    fd = posix::open(path.c_str(), O_RDONLY);
   } while (fd < 0 && errno == EINTR);
   if (fd < 0) {
     *out_error =
@@ -1519,7 +1529,7 @@ void ImportWriter::AddFile(const FileDescriptor* file,
     ParseFrameworkMappings();
   }
 
-  map<string, string>::iterator proto_lookup =
+  std::map<string, string>::iterator proto_lookup =
       proto_file_to_framework_name_.find(file->name());
   if (proto_lookup != proto_file_to_framework_name_.end()) {
     other_framework_imports_.push_back(
@@ -1640,7 +1650,7 @@ bool ImportWriter::ProtoFrameworkCollector::ConsumeLine(
     StringPiece proto_file(proto_file_list, start, offset - start);
     StringPieceTrimWhitespace(&proto_file);
     if (proto_file.size() != 0) {
-      map<string, string>::iterator existing_entry =
+      std::map<string, string>::iterator existing_entry =
           map_->find(proto_file.ToString());
       if (existing_entry != map_->end()) {
         std::cerr << "warning: duplicate proto file reference, replacing framework entry for '"

@@ -30,8 +30,6 @@
 
 package com.google.protobuf;
 
-import static com.google.common.truth.Truth.assertThat;
-
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.TextFormat.Parser.SingularOverwritePolicy;
@@ -170,6 +168,7 @@ public class TextFormatTest extends TestCase {
 
   // Creates an example unknown field set.
   private UnknownFieldSet makeUnknownFieldSet() {
+
     return UnknownFieldSet.newBuilder()
         .addField(5,
             UnknownFieldSet.Field.newBuilder()
@@ -177,6 +176,12 @@ public class TextFormatTest extends TestCase {
             .addFixed32(2)
             .addFixed64(3)
             .addLengthDelimited(ByteString.copyFromUtf8("4"))
+            .addLengthDelimited(UnknownFieldSet.newBuilder()
+                .addField(12,
+                    UnknownFieldSet.Field.newBuilder()
+                        .addVarint(6)
+                        .build())
+                .build().toByteString())
             .addGroup(
                 UnknownFieldSet.newBuilder()
                 .addField(10,
@@ -209,20 +214,23 @@ public class TextFormatTest extends TestCase {
         .build();
 
     assertEquals(
-      "5: 1\n" +
-      "5: 0x00000002\n" +
-      "5: 0x0000000000000003\n" +
-      "5: \"4\"\n" +
-      "5 {\n" +
-      "  10: 5\n" +
-      "}\n" +
-      "8: 1\n" +
-      "8: 2\n" +
-      "8: 3\n" +
-      "15: 12379813812177893520\n" +
-      "15: 0xabcd1234\n" +
-      "15: 0xabcdef1234567890\n",
-      TextFormat.printToString(message));
+        "5: 1\n"
+            + "5: 0x00000002\n"
+            + "5: 0x0000000000000003\n"
+            + "5: \"4\"\n"
+            + "5: {\n"
+            + "  12: 6\n"
+            + "}\n"
+            + "5 {\n"
+            + "  10: 5\n"
+            + "}\n"
+            + "8: 1\n"
+            + "8: 2\n"
+            + "8: 3\n"
+            + "15: 12379813812177893520\n"
+            + "15: 0xabcd1234\n"
+            + "15: 0xabcdef1234567890\n",
+        TextFormat.printToString(message));
   }
 
   public void testPrintField() throws Exception {
@@ -863,7 +871,7 @@ public class TextFormatTest extends TestCase {
   }
 
   public void testShortDebugString_unknown() {
-    assertEquals("5: 1 5: 0x00000002 5: 0x0000000000000003 5: \"4\" 5 { 10: 5 }"
+    assertEquals("5: 1 5: 0x00000002 5: 0x0000000000000003 5: \"4\" 5: { 12: 6 } 5 { 10: 5 }"
         + " 8: 1 8: 2 8: 3 15: 12379813812177893520 15: 0xabcd1234 15:"
         + " 0xabcdef1234567890",
         TextFormat.shortDebugString(makeUnknownFieldSet()));
@@ -1079,12 +1087,12 @@ public class TextFormatTest extends TestCase {
     {
       TestMap.Builder dest = TestMap.newBuilder();
       TextFormat.merge(text, dest);
-      assertThat(dest.build()).isEqualTo(message);
+      assertEquals(message, dest.build());
     }
     {
       TestMap.Builder dest = TestMap.newBuilder();
       parserWithOverwriteForbidden.merge(text, dest);
-      assertThat(dest.build()).isEqualTo(message);
+      assertEquals(message, dest.build());
     }
   }
 
@@ -1096,10 +1104,10 @@ public class TextFormatTest extends TestCase {
     TestMap.Builder dest = TestMap.newBuilder();
     parserWithOverwriteForbidden.merge(text, dest);
     TestMap message = dest.build();
-    assertThat(message.getStringToInt32Field().size()).isEqualTo(2);
-    assertThat(message.getInt32ToMessageField().size()).isEqualTo(2);
-    assertThat(message.getStringToInt32Field().get("x")).isEqualTo(10);
-    assertThat(message.getInt32ToMessageField().get(2).getValue()).isEqualTo(200);
+    assertEquals(2, message.getStringToInt32Field().size());
+    assertEquals(2, message.getInt32ToMessageField().size());
+    assertEquals(10, message.getStringToInt32Field().get("x").intValue());
+    assertEquals(200, message.getInt32ToMessageField().get(2).getValue());
   }
 
   public void testMapShortFormEmpty() throws Exception {
@@ -1108,8 +1116,8 @@ public class TextFormatTest extends TestCase {
     TestMap.Builder dest = TestMap.newBuilder();
     parserWithOverwriteForbidden.merge(text, dest);
     TestMap message = dest.build();
-    assertThat(message.getStringToInt32Field().size()).isEqualTo(0);
-    assertThat(message.getInt32ToMessageField().size()).isEqualTo(0);
+    assertEquals(0, message.getStringToInt32Field().size());
+    assertEquals(0, message.getInt32ToMessageField().size());
   }
 
   public void testMapShortFormTrailingComma() throws Exception {
@@ -1119,7 +1127,7 @@ public class TextFormatTest extends TestCase {
       parserWithOverwriteForbidden.merge(text, dest);
       fail("Expected parse exception.");
     } catch (TextFormat.ParseException e) {
-      assertThat(e).hasMessageThat().isEqualTo("1:48: Expected \"{\".");
+      assertEquals("1:48: Expected \"{\".", e.getMessage());
     }
   }
 
@@ -1134,8 +1142,8 @@ public class TextFormatTest extends TestCase {
       TestMap.Builder builder = TestMap.newBuilder();
       defaultParser.merge(text, builder);
       TestMap map = builder.build();
-      assertThat(map.getInt32ToInt32Field().size()).isEqualTo(2);
-      assertThat(map.getInt32ToInt32Field().get(1).intValue()).isEqualTo(30);
+      assertEquals(2, map.getInt32ToInt32Field().size());
+      assertEquals(30, map.getInt32ToInt32Field().get(1).intValue());
     }
 
     {
@@ -1144,8 +1152,8 @@ public class TextFormatTest extends TestCase {
       TestMap.Builder builder = TestMap.newBuilder();
       defaultParser.merge(text, builder);
       TestMap map = builder.build();
-      assertThat(map.getInt32ToInt32Field().size()).isEqualTo(2);
-      assertThat(map.getInt32ToInt32Field().get(1).intValue()).isEqualTo(30);
+      assertEquals(2, map.getInt32ToInt32Field().size());
+      assertEquals(30, map.getInt32ToInt32Field().get(1).intValue());
     }
   }
 

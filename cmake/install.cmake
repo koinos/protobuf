@@ -11,7 +11,13 @@ if (protobuf_BUILD_PROTOC)
   list(APPEND _install_targets libprotoc)
 endif ()
 
-foreach(_library ${_install_targets})
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf.pc.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/protobuf.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/protobuf-lite.pc.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/protobuf-lite.pc @ONLY)
+
+foreach(_library
+  ${_install_targets})
   set_property(TARGET ${_library}
     PROPERTY INTERFACE_INCLUDE_DIRECTORIES
     $<BUILD_INTERFACE:${protobuf_source_dir}/src>
@@ -28,6 +34,8 @@ if (protobuf_BUILD_PROTOC)
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc
     BUNDLE  DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
 endif()
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/protobuf.pc ${CMAKE_CURRENT_BINARY_DIR}/protobuf-lite.pc DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 file(STRINGS extract_includes.bat.in _extract_strings
   REGEX "^copy")
