@@ -2,7 +2,7 @@
  * automatically by autoheader / autoconf / configure. */
 
 /* the location of <hash_map> */
-#define HASH_MAP_H <hash_map>
+#define HASH_MAP_H <unordered_map>
 
 /* the namespace of hash_map/hash_set */
 // Apparently Microsoft decided to move hash_map *back* to the std namespace
@@ -12,17 +12,20 @@
 #if _MSC_VER < 1310 || _MSC_VER >= 1600
 #define HASH_NAMESPACE std
 #else
-#define HASH_NAMESPACE stdext
+#define HASH_NAMESPACE std
 #endif
 
 /* the location of <hash_set> */
-#define HASH_SET_H <hash_set>
+#define HASH_SET_H <unordered_set>
 
 /* define if the compiler has hash_map */
 #define HAVE_HASH_MAP 1
 
 /* define if the compiler has hash_set */
 #define HAVE_HASH_SET 1
+
+#define HASH_MAP_CLASS unordered_map
+#define HASH_SET_CLASS unordered_set
 
 /* define if you want to use zlib.  See readme.txt for additional
  * requirements. */
