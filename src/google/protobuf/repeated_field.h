@@ -51,6 +51,8 @@
 #include <google/protobuf/stubs/common.h>
 #include <google/protobuf/message_lite.h>
 
+#include <algorithm> // std::max
+
 namespace google {
 
 namespace protobuf {
@@ -600,7 +602,7 @@ void RepeatedField<Element>::Reserve(int new_size) {
   if (total_size_ >= new_size) return;
 
   Element* old_elements = elements_;
-  total_size_ = max(total_size_ * 2, new_size);
+  total_size_ = std::max(total_size_ * 2, new_size);
   elements_ = new Element[total_size_];
   MoveArray(elements_, old_elements, current_size_);
   if (old_elements != initial_space_) {

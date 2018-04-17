@@ -11,4 +11,8 @@ project(protobuf C CXX)
 
 hunter_add_package(ZLIB)
 
+if(MSVC)
+  add_definitions(-D_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS)
+endif()
+
 add_subdirectory(cmake)

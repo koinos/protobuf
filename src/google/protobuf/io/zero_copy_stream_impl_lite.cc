@@ -36,6 +36,8 @@
 #include <google/protobuf/stubs/common.h>
 #include <google/protobuf/stubs/stl_util-inl.h>
 
+#include <algorithm> // std::min
+
 namespace google {
 namespace protobuf {
 namespace io {
@@ -63,7 +65,7 @@ ArrayInputStream::~ArrayInputStream() {
 
 bool ArrayInputStream::Next(const void** data, int* size) {
   if (position_ < size_) {
-    last_returned_size_ = min(block_size_, size_ - position_);
+    last_returned_size_ = std::min(block_size_, size_ - position_);
     *data = data_ + position_;
     *size = last_returned_size_;
     position_ += last_returned_size_;
