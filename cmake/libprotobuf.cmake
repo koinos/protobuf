@@ -120,9 +120,9 @@ endif()
 
 add_library(libprotobuf ${protobuf_SHARED_OR_STATIC}
   ${libprotobuf_lite_files} ${libprotobuf_files} ${libprotobuf_includes} ${libprotobuf_rc_files})
-target_link_libraries(libprotobuf ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(libprotobuf PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 if(protobuf_WITH_ZLIB)
-    target_link_libraries(libprotobuf ${ZLIB_LIBRARIES})
+    target_link_libraries(libprotobuf PUBLIC ${ZLIB_LIBRARIES})
 endif()
 target_include_directories(libprotobuf PUBLIC ${protobuf_source_dir}/src)
 if(MSVC AND protobuf_BUILD_SHARED_LIBS)
@@ -135,3 +135,8 @@ set_target_properties(libprotobuf PROPERTIES
     OUTPUT_NAME ${LIB_PREFIX}protobuf
     DEBUG_POSTFIX "${protobuf_DEBUG_POSTFIX}")
 add_library(protobuf::libprotobuf ALIAS libprotobuf)
+
+if(ANDROID)
+  find_package(android_log REQUIRED)
+  target_link_libraries(libprotobuf PUBLIC android_log::android_log)
+endif()
