@@ -65,9 +65,9 @@ endif()
 
 add_library(libprotobuf-lite ${protobuf_SHARED_OR_STATIC}
   ${libprotobuf_lite_files} ${libprotobuf_lite_includes} ${libprotobuf_lite_rc_files})
-target_link_libraries(libprotobuf-lite ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(libprotobuf-lite PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 if(protobuf_LINK_LIBATOMIC)
-  target_link_libraries(libprotobuf-lite atomic)
+  target_link_libraries(libprotobuf-lite PUBLIC atomic)
 endif()
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
 	target_link_libraries(libprotobuf-lite log)
